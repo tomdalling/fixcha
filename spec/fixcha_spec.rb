@@ -9,7 +9,7 @@ RSpec.describe Fixcha do
   let(:content_type_repo) { nil }
 
   it 'can read whole files' do
-    expect(subject.content).to eq("Why not Zoidberg?\n")
+    expect(subject.read).to eq("Why not Zoidberg?\n")
   end
 
   it 'has a Pathname' do
@@ -30,7 +30,7 @@ RSpec.describe Fixcha do
     expect(subject.to_path).to eq(subject.path.to_path)
   end
 
-  describe '#upload' do
+  describe '#to_upload' do
     let(:content_type_repo) {
       Fixcha::ContentTypeRepo.new(
         baggins: 'rings/lord',
@@ -38,7 +38,7 @@ RSpec.describe Fixcha do
     }
 
     it 'can make a Rack::Test::UploadedFile' do
-      upload = repo.fixcha('crazy/bilbo.baggins').upload
+      upload = repo.fixcha('crazy/bilbo.baggins').to_upload
 
       expect(upload).to be_a(Rack::Test::UploadedFile)
       expect(upload).to have_attributes(
@@ -57,7 +57,7 @@ RSpec.describe Fixcha do
 
     it 'allows the content type to be specified explicitly' do
       subject = repo.fixcha('crazy/no_extension', content_type: 'application/zip')
-      expect(subject.upload.content_type).to eq('application/zip')
+      expect(subject.to_upload.content_type).to eq('application/zip')
     end
   end
 

@@ -8,15 +8,15 @@ class Fixcha
     @content_type = content_type
   end
 
-  def content
-    path.read
+  def read(*args)
+    path.read(*args)
   end
 
   def open(*args, &block)
     File.open(path, *args, &block)
   end
 
-  def upload
+  def to_upload
     require_rack_test!
     Rack::Test::UploadedFile.new(path, content_type)
   end
@@ -88,4 +88,15 @@ class Fixcha
       @content_types_by_extension.fetch(ext.downcase, DEFAULT_CONTENT_TYPE)
     end
   end
+
+  module Methods
+    def fixcha(*args)
+      repo = Repo.new(base_path: 'spec/fixtures')
+      repo.fixcha(*args)
+    end
+  end
+end
+
+if defined?(Paperclip)
+  require 'fixcha/paperclip'
 end
